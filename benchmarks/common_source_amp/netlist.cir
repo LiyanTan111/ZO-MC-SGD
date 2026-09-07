@@ -1,0 +1,16 @@
+* common_source_amp
+.model NMOS NMOS LEVEL=1 VTO={vto_n} KP={kp_n} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS PMOS LEVEL=1 VTO={vto_p} KP={kp_p} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+Vdd vdd 0 {vdd}
+Iref vdd nbias {ibias}
+Mref nbias nbias vdd vdd PMOS W={wp_eff} L={lp_eff}
+Mload out nbias vdd vdd PMOS W={wp_eff} L={lp_eff}
+* large feedback resistor for self-biasing the input gate at the output DC
+Rfb out gate {rfb}
+* AC source drives input through coupling cap; input DC is set by feedback
+Vin in 0 DC 0 AC 1
+Cin in gate {cin}
+M1 out gate 0 0 NMOS W={wn_eff} L={ln_eff}
+Cl out 0 {cload}
+.ac dec 20 1 1g
+.end

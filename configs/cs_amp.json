@@ -1,0 +1,22 @@
+{
+  "circuit": "cs_amp",
+  "spec_module": "benchmarks.common_source_amp.spec",
+  "sigma_scale": 3.0,
+  "alphas": {
+    "alpha_gain": 5.0,
+    "alpha_ugbw_log": 10.0,
+    "alpha_power_mW": 10.0
+  },
+  "alpha_variant": "near_hard",
+  "x_init": [
+    2.5354648741007703e-05,
+    3.4662519800800253e-07,
+    2.8649576763178026e-05,
+    9.614870853529329e-07,
+    4.838735890078641e-05,
+    1.1349896734588634e-12
+  ],
+  "x_init_seed": 1,
+  "x_init_yield_n_mc64": 0.28125,
+  "n_design": 6
+}

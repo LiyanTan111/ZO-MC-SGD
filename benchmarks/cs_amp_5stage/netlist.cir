@@ -1,0 +1,56 @@
+* cs_amp_5stage — five CS amplifier stages cascaded, AC-coupled
+* Each stage = byte-identical NMOS amplifier with PMOS current-mirror load
+* and feedback-resistor self-bias (round-1.6-validated common_source_amp,
+* extended cleanly from cs_amp_3stage by adding stages 4 and 5).
+.model NMOS_1 NMOS LEVEL=1 VTO={vto_n_1} KP={kp_n_1} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_1 PMOS LEVEL=1 VTO={vto_p_1} KP={kp_p_1} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_2 NMOS LEVEL=1 VTO={vto_n_2} KP={kp_n_2} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_2 PMOS LEVEL=1 VTO={vto_p_2} KP={kp_p_2} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_3 NMOS LEVEL=1 VTO={vto_n_3} KP={kp_n_3} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_3 PMOS LEVEL=1 VTO={vto_p_3} KP={kp_p_3} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_4 NMOS LEVEL=1 VTO={vto_n_4} KP={kp_n_4} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_4 PMOS LEVEL=1 VTO={vto_p_4} KP={kp_p_4} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_5 NMOS LEVEL=1 VTO={vto_n_5} KP={kp_n_5} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_5 PMOS LEVEL=1 VTO={vto_p_5} KP={kp_p_5} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+Vdd vdd 0 {vdd}
+* Stage 1
+Iref1 vdd nbias1 {ibias_1}
+Mref1 nbias1 nbias1 vdd vdd PMOS_1 W={wp_eff_1} L={lp_eff_1}
+Mload1 out1 nbias1 vdd vdd PMOS_1 W={wp_eff_1} L={lp_eff_1}
+Rfb1 out1 gate1 {rfb_1}
+M1 out1 gate1 0 0 NMOS_1 W={wn_eff_1} L={ln_eff_1}
+* Stage 2
+Cc12 out1 gate2 {cc}
+Iref2 vdd nbias2 {ibias_2}
+Mref2 nbias2 nbias2 vdd vdd PMOS_2 W={wp_eff_2} L={lp_eff_2}
+Mload2 out2 nbias2 vdd vdd PMOS_2 W={wp_eff_2} L={lp_eff_2}
+Rfb2 out2 gate2 {rfb_2}
+M2 out2 gate2 0 0 NMOS_2 W={wn_eff_2} L={ln_eff_2}
+* Stage 3
+Cc23 out2 gate3 {cc}
+Iref3 vdd nbias3 {ibias_3}
+Mref3 nbias3 nbias3 vdd vdd PMOS_3 W={wp_eff_3} L={lp_eff_3}
+Mload3 out3 nbias3 vdd vdd PMOS_3 W={wp_eff_3} L={lp_eff_3}
+Rfb3 out3 gate3 {rfb_3}
+M3 out3 gate3 0 0 NMOS_3 W={wn_eff_3} L={ln_eff_3}
+* Stage 4
+Cc34 out3 gate4 {cc}
+Iref4 vdd nbias4 {ibias_4}
+Mref4 nbias4 nbias4 vdd vdd PMOS_4 W={wp_eff_4} L={lp_eff_4}
+Mload4 out4 nbias4 vdd vdd PMOS_4 W={wp_eff_4} L={lp_eff_4}
+Rfb4 out4 gate4 {rfb_4}
+M4 out4 gate4 0 0 NMOS_4 W={wn_eff_4} L={ln_eff_4}
+* Stage 5 — final stage; output node 'out' is the cascade output
+Cc45 out4 gate5 {cc}
+Iref5 vdd nbias5 {ibias_5}
+Mref5 nbias5 nbias5 vdd vdd PMOS_5 W={wp_eff_5} L={lp_eff_5}
+Mload5 out nbias5 vdd vdd PMOS_5 W={wp_eff_5} L={lp_eff_5}
+Rfb5 out gate5 {rfb_5}
+M5 out gate5 0 0 NMOS_5 W={wn_eff_5} L={ln_eff_5}
+* Output load
+Cload out 0 {cload}
+* Input via coupling cap to stage 1 gate
+Vin in 0 DC 0 AC 1
+Cin in gate1 {cin}
+.ac dec 20 1 1g
+.end

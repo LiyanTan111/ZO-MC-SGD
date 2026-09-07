@@ -1,0 +1,38 @@
+{
+  "circuit": "cs_se_miller_3stage",
+  "spec_module": "benchmarks.cs_se_miller_3stage.spec",
+  "sigma_scale": 0.1,
+  "alphas": {
+    "alpha_gain": 5.0,
+    "alpha_ugbw_log": 10.0,
+    "alpha_power_mW": 10.0
+  },
+  "alpha_variant": "near_hard",
+  "x_init": [
+    2e-05,
+    1.8e-07,
+    4e-05,
+    5e-07,
+    10000000.0,
+    5e-05,
+    2e-05,
+    1.8e-07,
+    4e-05,
+    5e-07,
+    10000000.0,
+    5e-05,
+    2e-05,
+    1.8e-07,
+    4e-05,
+    5e-07,
+    10000000.0,
+    5e-05,
+    2e-11,
+    30.0,
+    2e-11,
+    30.0
+  ],
+  "x_init_seed": -1,
+  "x_init_yield_n_mc64": 0.6875,
+  "n_design": 22
+}

@@ -1,0 +1,45 @@
+* cs_se_miller — single-ended two-stage Miller-compensated amplifier (Round 2.5).
+* Diagnostic counterpart to miller_ota: same Miller compensation but NO diff pair.
+*
+* Topology: two cascaded self-biased CS-amp stages (round-1.6 cs_amp pattern)
+* with AC coupling between them, plus Miller cap Cc + nulling resistor Rz across
+* the two stages (from stage-1 out to stage-2 out). Self-biasing avoids the
+* DC-balance pathology that arises if you naively delete the diff pair from
+* miller_ota (the DC bias of the inter-stage node becomes undetermined).
+*
+* Each transistor has its own .model card so per-device mismatch ξ is independent.
+* Mref_k and Mload_k share the per-stage W/L (mirror-matched by design).
+*
+* Devices: M1 (NMOS_S1), Mref1, Mload1 (PMOS_S1) — stage 1
+*          M2 (NMOS_S2), Mref2, Mload2 (PMOS_S2) — stage 2
+.model NMOS_S1 NMOS LEVEL=1 VTO={vto_n1} KP={kp_n1} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_S1_REF PMOS LEVEL=1 VTO={vto_pref1} KP={kp_pref1} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model PMOS_S1_LOAD PMOS LEVEL=1 VTO={vto_pload1} KP={kp_pload1} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_S2 NMOS LEVEL=1 VTO={vto_n2} KP={kp_n2} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_S2_REF PMOS LEVEL=1 VTO={vto_pref2} KP={kp_pref2} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model PMOS_S2_LOAD PMOS LEVEL=1 VTO={vto_pload2} KP={kp_pload2} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+Vdd vdd 0 {vdd}
+* Stage 1
+Iref1 vdd nbias1 {ibias_1}
+Mref1 nbias1 nbias1 vdd vdd PMOS_S1_REF W={wp_eff_1} L={lp_eff_1}
+Mload1 out1 nbias1 vdd vdd PMOS_S1_LOAD W={wp_eff_1} L={lp_eff_1}
+Rfb1 out1 gate1 {rfb_1}
+M1 out1 gate1 0 0 NMOS_S1 W={wn_eff_1} L={ln_eff_1}
+* Stage 2 — AC-coupled from stage-1 output
+Cc12 out1 gate2 {cc_ac}
+Iref2 vdd nbias2 {ibias_2}
+Mref2 nbias2 nbias2 vdd vdd PMOS_S2_REF W={wp_eff_2} L={lp_eff_2}
+Mload2 out nbias2 vdd vdd PMOS_S2_LOAD W={wp_eff_2} L={lp_eff_2}
+Rfb2 out gate2 {rfb_2}
+M2 out gate2 0 0 NMOS_S2 W={wn_eff_2} L={ln_eff_2}
+* Miller compensation: Cc + Rz across the two stages
+* (from stage-1 out to stage-2 out — same role as in miller_ota)
+Rz out1 nz {rz_miller}
+Cc nz out {cc_miller}
+* Output load
+Cload out 0 {cload}
+* Single-ended AC drive (input via AC coupling cap to stage-1 self-biased gate)
+Vin in 0 DC 0 AC 1
+Cin in gate1 {cin}
+.ac dec 20 1 1g
+.end

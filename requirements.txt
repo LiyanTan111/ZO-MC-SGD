@@ -1,0 +1,19 @@
+# Versions the reported results were produced with (Python 3.11.5).
+# Looser bounds work; these are pinned so the numbers are reproducible.
+numpy==1.24.3
+scipy==1.11.1
+
+# baselines
+scikit-optimize==0.10.2   # BO (Gaussian-process expected improvement)
+cma==4.4.4                # CMA-ES (pycma)
+torch==2.11.0             # RobustAnalog (DDPG)
+
+# circuit simulation: also needs libngspice
+#   conda install -c conda-forge ngspice-lib
+PySpice==1.5
+
+# figures / tables
+matplotlib==3.7.2
+pandas==2.0.3
+
+pytest>=7.4

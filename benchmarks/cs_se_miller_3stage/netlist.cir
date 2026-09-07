@@ -1,0 +1,54 @@
+* cs_se_miller_3stage — single-ended three-stage Miller-compensated amplifier.
+* Round-2.9 deliverable. Stacks 3 cs_se_miller per-stage blocks with 2 Miller
+* compensation networks between consecutive stages. AC-coupled inter-stage.
+*
+* Topology: three cascaded self-biased CS-amp stages. Each stage = M (NMOS CS)
+* + Mref (PMOS diode bias) + Mload (PMOS mirror load) with R_fb self-bias.
+* Inter-stage AC coupling caps. Miller compensation: Cc1+Rz1 from out1 to out2,
+* Cc2+Rz2 from out2 to out3 (= out, the final amp output).
+*
+* Devices: 9 transistors total (3 stages each with M, Mref, Mload).
+* d_xi = 9 * 4 + 2 globals = 38.
+.model NMOS_S1 NMOS LEVEL=1 VTO={vto_n1} KP={kp_n1} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_S1_REF PMOS LEVEL=1 VTO={vto_pref1} KP={kp_pref1} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model PMOS_S1_LOAD PMOS LEVEL=1 VTO={vto_pload1} KP={kp_pload1} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_S2 NMOS LEVEL=1 VTO={vto_n2} KP={kp_n2} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_S2_REF PMOS LEVEL=1 VTO={vto_pref2} KP={kp_pref2} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model PMOS_S2_LOAD PMOS LEVEL=1 VTO={vto_pload2} KP={kp_pload2} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model NMOS_S3 NMOS LEVEL=1 VTO={vto_n3} KP={kp_n3} LAMBDA=0.05 GAMMA=0.4 PHI=0.7
+.model PMOS_S3_REF PMOS LEVEL=1 VTO={vto_pref3} KP={kp_pref3} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+.model PMOS_S3_LOAD PMOS LEVEL=1 VTO={vto_pload3} KP={kp_pload3} LAMBDA=0.07 GAMMA=0.4 PHI=0.7
+Vdd vdd 0 {vdd}
+* Stage 1
+Iref1 vdd nbias1 {ibias_1}
+Mref1 nbias1 nbias1 vdd vdd PMOS_S1_REF W={wp_eff_1} L={lp_eff_1}
+Mload1 out1 nbias1 vdd vdd PMOS_S1_LOAD W={wp_eff_1} L={lp_eff_1}
+Rfb1 out1 gate1 {rfb_1}
+M1 out1 gate1 0 0 NMOS_S1 W={wn_eff_1} L={ln_eff_1}
+* Stage 2 — AC-coupled from stage-1 output
+Cc12 out1 gate2 {cc_ac}
+Iref2 vdd nbias2 {ibias_2}
+Mref2 nbias2 nbias2 vdd vdd PMOS_S2_REF W={wp_eff_2} L={lp_eff_2}
+Mload2 out2 nbias2 vdd vdd PMOS_S2_LOAD W={wp_eff_2} L={lp_eff_2}
+Rfb2 out2 gate2 {rfb_2}
+M2 out2 gate2 0 0 NMOS_S2 W={wn_eff_2} L={ln_eff_2}
+* Stage 3 — AC-coupled from stage-2 output. Final stage: out3 = out.
+Cc23 out2 gate3 {cc_ac}
+Iref3 vdd nbias3 {ibias_3}
+Mref3 nbias3 nbias3 vdd vdd PMOS_S3_REF W={wp_eff_3} L={lp_eff_3}
+Mload3 out nbias3 vdd vdd PMOS_S3_LOAD W={wp_eff_3} L={lp_eff_3}
+Rfb3 out gate3 {rfb_3}
+M3 out gate3 0 0 NMOS_S3 W={wn_eff_3} L={ln_eff_3}
+* Miller compensation network 1: Cc1 + Rz1 from out1 to out2
+Rz1 out1 nz1 {rz1_miller}
+Cc1 nz1 out2 {cc1_miller}
+* Miller compensation network 2: Cc2 + Rz2 from out2 to out3 (= out)
+Rz2 out2 nz2 {rz2_miller}
+Cc2 nz2 out {cc2_miller}
+* Output load
+Cload out 0 {cload}
+* Single-ended AC drive
+Vin in 0 DC 0 AC 1
+Cin in gate1 {cin}
+.ac dec 20 1 1g
+.end

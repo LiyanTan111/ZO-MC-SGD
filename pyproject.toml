@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zo-mc-sgd"
+version = "1.0.0"
+description = "ZO-MC-SGD: sample-efficient yield optimization of analog circuits via stochastic zeroth-order methods"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.11",
+  "scikit-optimize>=0.10",
+  "cma>=4.0",
+  "torch>=2.0",
+  "PySpice>=1.5",
+  "matplotlib>=3.7",
+  "pandas>=2.0",
+]
+
+
+[tool.setuptools.packages.find]
+include = ["zo_yield*", "methods*", "simulators*", "benchmarks*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.cir"]
