@@ -1,9 +1,17 @@
-# ZO-MC-SGD
+<h1 align="center">Simulation-Efficient Analog Circuit Yield Optimization via Monte Carlo Zeroth-Order Gradient Estimation</h1>
 
-Anonymized code accompanying the submission
+<p align="center"><b>Under review</b></p>
 
-> **Sample-Efficient Yield Optimization of Analog Circuits via Stochastic
-> Zeroth-Order Methods**
+<p align="center">
+Liyan Tan<sup>1</sup>, Yequan Zhao<sup>1</sup>, Ben F. Jamroz<sup>2</sup>, Ari Feldman<sup>2</sup>, Zheng Zhang<sup>1</sup><br>
+<sup>1</sup>University of California, Santa Barbara &nbsp;&nbsp; <sup>2</sup>National Institute of Standards and Technology
+</p>
+
+<p align="center">
+<a href="https://arxiv.org/abs/2609.30678">arXiv</a> &nbsp;·&nbsp;
+<a href="https://arxiv.org/pdf/2609.30678">PDF</a> &nbsp;·&nbsp;
+<a href="https://liyantan111.github.io/papers/zo-mc-sgd/">Project page</a>
+</p>
 
 Analog circuits must be sized for **yield** — the fraction of fabricated dies
 meeting every specification under process variation. Yield is
@@ -13,7 +21,8 @@ setting but recovers a descent direction: it optimizes a smooth surrogate of
 specification satisfaction using a Monte Carlo zeroth-order gradient estimated
 from process samples, never differentiating the simulator. On five SPICE
 benchmarks it reaches mean yield 0.95 within 50–200 simulations, up to 8× fewer
-than Bayesian optimization, CMA-ES, particle swarm, TuRBO and RobustAnalog.
+than the best of Bayesian optimization, CMA-ES, particle swarm, TuRBO and
+RobustAnalog.
 
 This repository contains the optimizer, the five ngspice benchmark circuits,
 the five baselines it is compared against, and the scripts that reproduce the
@@ -80,6 +89,22 @@ Runs write to `experiments/results/<circuit>/` (git-ignored).
 ```bash
 pytest tests/ -q      # SPICE-backed tests require libngspice
 ```
+
+## Citation
+
+```bibtex
+@article{tan2026yield,
+  title   = {Simulation-Efficient Analog Circuit Yield Optimization via Monte Carlo Zeroth-Order Gradient Estimation},
+  author  = {Tan, Liyan and Zhao, Yequan and Jamroz, Ben F. and Feldman, Ari and Zhang, Zheng},
+  journal = {arXiv preprint arXiv:2609.30678},
+  year    = {2026}
+}
+```
+
+## Acknowledgment
+
+This work was supported by the National Institute of Standards and Technology
+(NIST) under Award #70NANB24H084.
 
 ## License
 

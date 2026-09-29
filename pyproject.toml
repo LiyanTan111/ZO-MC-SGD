@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "zo-mc-sgd"
 version = "1.0.0"
-description = "ZO-MC-SGD: sample-efficient yield optimization of analog circuits via stochastic zeroth-order methods"
+description = "ZO-MC-SGD: simulation-efficient analog circuit yield optimization via Monte Carlo zeroth-order gradient estimation"
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
+authors = [{name = "Liyan Tan", email = "liyan_tan@ucsb.edu"}]
 dependencies = [
   "numpy>=1.24",
   "scipy>=1.11",
@@ -20,6 +21,9 @@ dependencies = [
   "pandas>=2.0",
 ]
 
+[project.urls]
+Paper = "https://arxiv.org/abs/2609.30678"
+"Project page" = "https://liyantan111.github.io/papers/zo-mc-sgd/"
 
 [tool.setuptools.packages.find]
 include = ["zo_yield*", "methods*", "simulators*", "benchmarks*"]
